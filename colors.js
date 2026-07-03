@@ -156,14 +156,35 @@ module.exports = {
       500: '#2C2C3D', 600: '#202034', 700: '#16162B', 800: '#0E0E23', 900: '#2D3E76',
       _conflictNote: 'input2 differs from `input` in B (A had them equal). Confirm intended value.',
     },
+
+    // ── State scales (success/warning/danger) — CONFIRMED identical between A and B, zero conflict.
+    // These are DISTINCT palettes from greenBrand/yellowBrand/redBrand in the source files (not aliases
+    // of them) — e.g. success.400 (#41D9A2, minty) vs greenBrand.400 (#44bf72, standard green) are
+    // genuinely different colors. Keep them separate; don't collapse into greenBrand/yellowBrand/redBrand.
+    // DEFAULT key added (=.500) so bare `bg-success` still works, same fix pattern as the blackBrand issue.
+    success: {
+      DEFAULT: '#0DC180',
+      50: '#f2fbf7', 100: '#CCFBED', 200: '#9BF8D1', 300: '#68ECBC', 400: '#41D9A2',
+      500: '#0DC180', 600: '#09A576', 700: '#068A5A', 800: '#046F48', 900: '#025C3C',
+      allow: '#0CA68A', overview: '#0CC281', status: '#A6F0E3',
+    },
+    warning: {
+      DEFAULT: '#FFC832',
+      50: '#fefbf2', 100: '#FFF8D6', 200: '#FFEFAD', 300: '#FFE483', 400: '#FFDA65',
+      500: '#FFC832', 600: '#DBA524', 700: '#B78419', 800: '#93650F', 900: '#7A4F09',
+    },
+    danger: {
+      DEFAULT: '#FF3F3F',
+      50: '#fef5f5', 100: '#FFD8D8', 200: '#FFB2B2', 300: '#FF8B8B', 400: '#FF6F6F',
+      500: '#FF3F3F', 600: '#DB2E2E', 700: '#B71F1F', 800: '#931414', 900: '#7A0C0C',
+    },
   },
 
-  // ── Semantic layer — derived from raw, matches the meaning comments found in colors.js (C) ──
+  // ── Semantic layer — only for concepts that AREN'T already a full raw scale.
+  // success/warning/danger now live in `raw` above (with DEFAULT key), so bg-success-400,
+  // bg-warning-600, bg-danger etc. all work directly — no separate semantic entry needed for them.
   semantic: {
     primary: { DEFAULT: '#842CDD', hover: '#6C1CCD', border: '#7A27D6', selectedBg: '#DBC5F5', foreground: '#ffffff' },
-    success: { DEFAULT: '#00b35A', hover: '#44bf72', border: '#6aca8b', background: '#e5f6ea' },
-    warning: { DEFAULT: '#edb500', hover: '#efc018', border: '#f1cc46', background: '#fdf6df' },
-    danger:  { DEFAULT: '#ff3733', hover: '#ff3733', border: '#ff4d50', background: '#ffebef' },
     background: '#ffffff',
     foreground: '#0a0f18',
   },
