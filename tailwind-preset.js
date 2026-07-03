@@ -6,9 +6,6 @@ module.exports = {
       colors: {
         ...raw,
         primary: semantic.primary,
-        success: semantic.success,
-        warning: semantic.warning,
-        danger: semantic.danger,
         background: semantic.background,
         foreground: semantic.foreground,
       },
