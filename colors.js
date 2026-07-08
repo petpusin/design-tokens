@@ -27,9 +27,14 @@
  * `black` specifically needs a `DEFAULT` key so bare `bg-black` still resolves (this was
  * true regardless of naming — see history — not reintroducing that bug here).
  *
- * ── VALUE CONFLICTS re-litigated against file D — both re-confirmed as-is ──
- *   - yellow.100: kept #f9ebaf (file D uses file A's older #fff2a8 — not adopted)
- *   - dark.input2: kept #434D5D (file D uses file A's value, same as `input` — not adopted)
+ * ── VALUE CONFLICTS — final status ──
+ *   - yellow.50/.100: RESOLVED → #fffce6/#fff2a8 (fs-biz-panel adopted as source of
+ *     truth per team decision; also matches fs-content-panel's real file)
+ *   - dark.input2: RESOLVED → #232A37, same as `input` (fs-biz-panel adopted as
+ *     source of truth per team decision; also matches fs-content-panel's real file)
+ *   - purpleDeep, red.400: STILL UNRESOLVED, see inline comments — holding pending
+ *     explicit UX/dev confirmation, not re-litigated by the fs-biz-panel-priority
+ *     decision above (only yellow/dark.input2 were explicitly covered by that decision)
  *
  * ── SCOPE EXPANSION (this revision) ──
  * File D introduced a `colorsSemantic` light/dark theming system built on
@@ -70,6 +75,27 @@
  *   - fs-biz-panel's classroom-family tokens now match fs-content-panel's FULL set
  *     (not just the 3 that matched before) — 2/3 panels now identical, which is a
  *     stronger signal to promote to `core` than before. NOT done yet — flagging only.
+ *
+ * ── REVISION v5 (after fs-content-panel real-file verification) ──
+ *   - `apps.fsContentPanel` corrected: classroomOnsite/classroomOnline/
+ *     tagClassroomOnline/tagClassroomOnSite/learningPath/information/sub-table/ci
+ *     were REMOVED — confirmed these actually belong to fs-biz-panel only (already
+ *     present there), were misattributed to fs-content-panel from the original file
+ *     upload early in this project.
+ *   - `apps.fsContentPanel` gained lgreen/fscourse/fsSubCategory/lbody — present in
+ *     the real current file, but ⚠️ UNCERTAIN (that file was bootstrapped from
+ *     fs-biz-panel's old config, so these may be unused copy-paste — same risk
+ *     category as `other{}`, needs a real usage audit).
+ *   - `gray.upload/menu/email/overview` UN-EXCLUDED — reversed an earlier "assumed
+ *     dead" call after confirming these are present in fs-content-panel's real
+ *     current file too, not just fs-biz-panel's old one.
+ *   - `primary` gained `main/text/unlock/logo/overview/overview2` — pure addition.
+ *   - `info` gained `.700` — pure addition, different source than `.50`, no overlap.
+ *   - `purpleDeep` and `red.400` STILL UNRESOLVED: fs-content-panel's real file uses
+ *     fs-biz-panel's old (typo'd) values for both, contradicting the earlier team
+ *     decision (which chose file A's / file A+C's values). NOT changed — holding for
+ *     explicit UX/dev confirmation on which value is actually correct. Whoever
+ *     resolves this: check both `purpleDeep` and `red.400` inline comments below.
  */
 module.exports = {
   core: {
@@ -91,9 +117,10 @@ module.exports = {
         400: '#d9d9d9', 500: '#bfbfbf', 600: '#8c8c8c', 700: '#595959',
         800: '#262626', 900: '#0a0f18',
         status: '#333C4F', header: '#9B9B9B', divide: '#383838', subtitle: '#535353',
-        // fs-biz-panel's OLD file (v2) also had upload/menu/email/overview here —
-        // still deliberately excluded, assumed dead/component-specific. Revisit if
-        // migration breaks on gray-upload etc.
+        // REVERSED an earlier "deliberately excluded, assumed dead" call — confirmed
+        // present in BOTH fs-biz-panel's old file AND fs-content-panel's real current
+        // file, so clearly not dead. Un-excluded.
+        upload: '#F1F1F1', menu: '#ADADAD', email: '#9C9C9E', overview: '#4F4F4F',
       },
       neutralSecondary: {
         50: '#ebedf6', 100: '#cdd4e0', 200: '#afb7c8', 300: '#909baf',
@@ -116,6 +143,11 @@ module.exports = {
         300: 'var(--color-primary-300)', 400: 'var(--color-primary-400)', 500: 'var(--color-primary-500)',
         600: 'var(--color-primary-600)', 700: 'var(--color-primary-700)', 800: 'var(--color-primary-800)',
         900: 'var(--color-primary-900)',
+        // Found during content-panel file diff — pure addition, no conflict. `main`/`text`
+        // reuse the same CSS var as .500; the other 4 are hardcoded component-specific
+        // primary variants (unclear exact usage — flagging, not blocking).
+        main: 'var(--color-primary-500)', text: 'var(--color-primary-500)',
+        unlock: '#8337FF', logo: '#49236B', overview: '#5B13F4', overview2: '#7D18FE',
       },
 
       // was `purple` (A,B) === `primaryFS` (C) — literally identical, confirmed brand primary
@@ -125,7 +157,10 @@ module.exports = {
         800: '#5E13C7', 900: '#4900B9',
       },
 
-      // CONFIRMED by team decision: File A's scale chosen over B/C's muted family.
+      // ⚠️ RE-OPENED (was "CONFIRMED by team decision: File A's scale chosen over
+      // B/C's muted family") — fs-content-panel's real current file uses the OTHER
+      // (B's typo'd, muted #884196) family instead. Holding at the original decision's
+      // value below pending explicit UX/dev confirmation — do not silently pick either.
       purpleDeep: {
         50: '#f8f0ff', 100: '#f7f0ff', 200: '#e9d6ff', 300: '#cfadff',
         400: '#b485ff', 500: '#975DFF', 600: '#7343d9', 700: '#542eb3',
@@ -144,14 +179,20 @@ module.exports = {
         800: '#008038', 900: '#006124',
       },
 
-      // CONFIRMED by team decision: B/C family (over A's older values), .100 = confirmed exact value.
+      // RESOLVED (was RE-OPENED) — team decision: use fs-biz-panel as source of truth
+      // for this conflict. .50/.100 changed to match fs-biz-panel's real current file
+      // (doc8, UX-updated) — same values as fs-content-panel's real file too, so this
+      // is now consistent across all 3 confirmed real files, not just biz-panel alone.
       yellow: {
-        50: '#fdf6df', 100: '#f9ebaf', 200: '#f5d97c', 300: '#f1cc46',
+        50: '#fffce6', 100: '#fff2a8', 200: '#f5d97c', 300: '#f1cc46',
         400: '#efc018', 500: '#edb500', 600: '#eda800', 700: '#ed9600',
         800: '#ed8500', 900: '#ed6500', status: '#FFE2AA',
       },
 
-      // CONFIRMED by team decision: A/C consensus value (#ff3733) chosen over B's outlier.
+      // ⚠️ RE-OPENED (was "CONFIRMED by team decision: A/C consensus value (#ff3733)
+      // chosen over B's outlier") — fs-content-panel's real current file uses B's
+      // outlier (#E9423E) at .400 instead. Holding at the original decision's value
+      // below pending explicit UX/dev confirmation — do not silently pick either.
       red: {
         50: '#ffebef', 100: '#ffcdd4', 200: '#f99a9b', 300: '#ff4d50',
         400: '#ff3733', 500: '#ff3733', 600: '#f72d34', 700: '#e41f2d',
@@ -226,12 +267,18 @@ module.exports = {
         800: '#0E0E1B', 900: '#080817',
       },
 
-      // CONFIRMED by team decision: input2 = B's value (#434D5D), distinct from `input`.
-      // Kept B's fuller key set (input-disabled, upload, subtext, divide, modal, detail, info)
-      // since it's a superset of A, not a conflict.
+      // RESOLVED (was RE-OPENED) — team decision: use fs-biz-panel as source of truth.
+      // input2 changed to #232A37 (same as `input`) to match fs-biz-panel's real
+      // current file (doc8) — also consistent with fs-content-panel's real file, so
+      // all 3 confirmed real files now agree.
+      //
+      // The extra keys (input-disabled/upload/upload-icon/subtext/divide/modal/
+      // detail/info) are STILL NOT in any of the 3 real files checked — kept anyway
+      // per earlier explicit decision, in case fs-assessment-panel (not yet checked)
+      // still uses them.
       dark: {
         input: '#232A37',
-        input2: '#434D5D',
+        input2: '#232A37',
         'input-disabled': '#2C2E32', upload: '#DFE2E5', 'upload-icon': '#787878',
         text: '#8A94A6', text2: '#B0B7C3', subtext: '#434D5F', divide: '#2f3746',
         modal: '#3D3C41', detail: '#0A0F18', info: '#9B9B9B',
@@ -263,8 +310,10 @@ module.exports = {
 
       // Found missing during UX file diff — no conflict, pure addition. Source had a
       // typo ('##F4FBFF' double-hash) in one of the 3 source files; corrected here.
+      // .700 added later, found during content-panel file diff (different source, also
+      // pure addition — no overlap/conflict with .50/.500/.600 above).
       info: {
-        50: '#F4FBFF', 500: '#3C9FFC', 600: '#3388EC',
+        50: '#F4FBFF', 500: '#3C9FFC', 600: '#3388EC', 700: '#0F8EFF',
       },
     },
 
@@ -361,19 +410,29 @@ module.exports = {
   //                             for panel-specific semantic states (e.g. fsBizPanel's
   //                             openEnded/choice/apprenticeship/etc.)
   apps: {
+    // REVISED — verified against fs-content-panel's real current tailwind config.
+    // classroomOnsite/classroomOnline/tagClassroomOnline/tagClassroomOnSite/
+    // learningPath/information/sub-table/ci were REMOVED — confirmed these actually
+    // belong to fs-biz-panel only (they were misattributed here from the original
+    // "File A" upload early in this project; already correctly present under
+    // fsBizPanel below, no data lost).
     fsContentPanel: {
       rawColors: {
         classroom: '#C4A9FF',
-        classroomOnsite: '#0fa73a4d',
-        classroomOnline: '#edb50066',
-        tagClassroomOnline: '#3D67FD',
-        tagClassroomOnSite: '#ED8F0A',
-        learningPath: '#93C4FF',
-        information: '#1A74A8',
-        body: '#161c27',
-        'sub-table': '#05080C',
-        ci: { 1: '#0A0F18' },
         embledlink: '#FFE088',
+        body: '#161c27',
+        // CONFIRMED (was previously "uncertain") — fscourse/fsSubCategory/lbody belong
+        // to fs-content-panel, not fs-biz-panel. Verified by diffing fs-biz-panel's real
+        // current file (doesn't have these 3 at all) against this panel's real file
+        // (has them) — removed the duplicate copies that were mistakenly also sitting
+        // in apps.fsBizPanel.
+        fscourse: '#FF63A8',
+        fsSubCategory: '#FC3287',
+        lbody: '#E8EAEC',
+        // ⚠️ Still uncertain — lgreen's home panel not explicitly confirmed either way.
+        // Circumstantial support for content-panel-only: absent from 2 independently
+        // confirmed real fs-biz-panel files. Not verified via component usage audit.
+        lgreen: '#97C711',
       },
     },
     // CONFIRMED as fs-biz-panel's actual current tailwind.config.js (not
@@ -397,10 +456,9 @@ module.exports = {
         'sub-table': '#05080C',
         ci: { 1: '#0A0F18' },
         embledlink: '#FFE088',
-        // fs-biz-panel-only, from the older v2 file:
-        lbody: '#E8EAEC',
-        fscourse: '#FF63A8',
-        fsSubCategory: '#FC3287',
+        // REMOVED lbody/fscourse/fsSubCategory — confirmed these actually belong to
+        // fs-content-panel only (verified against fs-biz-panel's real current file,
+        // which doesn't have them). Moved, not duplicated — see apps.fsContentPanel.
         // New in this revision — used for Test/Survey Assessment + OJT tag types:
         blueViolet: { 50: '#EDE7F6', 500: '#472CDD' },  // Assessment: Open-ended tag
         burntOrange: { 500: '#DB7725' },                 // Assessment: Choice tag
