@@ -51,10 +51,21 @@
  * Also added `info` (found missing during file D diff, no conflict, pure addition —
  * one source file had a stray double-hash typo in the value, corrected here).
  *
+ * ── `other{}` BUCKET — RESOLVED (this revision) ──
+ * Diffed fs-biz-panel's and fs-content-panel's `other{}` by VALUE (not index — indices
+ * had drifted, confirmed: value #B5D2FF was other.3 in biz-panel but other.4 in
+ * content-panel). Findings:
+ *   - 2 values shared between both panels (index-agreement on one, drift on the other)
+ *     → promoted to `core.raw.accent` (teal, paleBlue)
+ *   - 5 values turned out to be exact duplicates of ALREADY-NAMED tokens elsewhere in
+ *     this file (fscourse, gray.overview, success.status, neutralNoble.50,
+ *     primary.overview) → no new token created, use the existing name instead
+ *   - remaining unique values → moved into each panel's own `apps.*.rawColors` with
+ *     placeholder color-descriptive names (not yet confirmed semantic names)
+ * The `other{}` bucket itself is now fully retired — nothing references it by that
+ * name anymore anywhere in this file.
+ *
  * Still deliberately excluded (not re-litigated here, see project notes):
- *   - `other{}` numeric-index bucket — confirmed still present with real values in file D,
- *     meaning it's still live in production. Needs per-panel usage audit before reintroducing
- *     with real names — holding off is now a bigger risk than before this was known, escalate.
  *   - `gray.upload/menu/email/overview` (fs-biz-panel only) — assumed dead/component-
  *     specific, deliberately dropped from neutral. Revisit only if migration
  *     breaks on these.
@@ -286,6 +297,17 @@ module.exports = {
         500: '#2C2C3D', 600: '#202034', 700: '#16162B', 800: '#0E0E23', 900: '#2D3E76',
       },
 
+      // ── RESOLVED from the deprecated `other{}` bucket (see bottom of this file's
+      // header comment for the full resolution). These 2 values were the ONLY ones
+      // confirmed identical (same value, same index even) between fs-biz-panel's and
+      // fs-content-panel's `other{}` — promoted to core since 2/3 panels share them.
+      // ⚠️ Names are PLACEHOLDERS (color-descriptive, not semantic) — nobody has
+      // confirmed what these are actually used for. Rename once real usage is known.
+      accent: {
+        teal: '#11C7BC',      // was other.1 in both panels (index agreed too)
+        paleBlue: '#B5D2FF',  // was other.3 in fs-biz-panel, other.4 in fs-content-panel (index drifted)
+      },
+
       // ── State scales (success/warning/danger) — CONFIRMED identical between A and B, zero conflict.
       // These are DISTINCT palettes from green/yellow/red in the source files (not aliases
       // of them) — e.g. success.400 (#41D9A2, minty) vs green.400 (#44bf72, standard green) are
@@ -433,6 +455,17 @@ module.exports = {
         // Circumstantial support for content-panel-only: absent from 2 independently
         // confirmed real fs-biz-panel files. Not verified via component usage audit.
         lgreen: '#97C711',
+        // ── RESOLVED from the deprecated `other{}` bucket, fs-content-panel-only values.
+        // #4F4F4F (other.2), #A6F0E3 (other.3), #CDCDCD (other.6), #5B13F4 (other.10)
+        // NOT added here — identical to gray.overview, success.status, neutralNoble.50,
+        // and primary.overview respectively; use those instead of new tokens.
+        // ⚠️ Names are PLACEHOLDERS — nobody has confirmed actual usage.
+        limeGreen: '#B1D941',    // was other.5
+        paleMint: '#D1FFE9',     // was other.7
+        slateGray: '#4C525F',    // was other.8
+        nearBlack: '#181717',    // was other.9
+        terracotta: '#D45454',   // was other.11
+        oliveYellow: '#C5C500',  // was other.12
       },
     },
     // CONFIRMED as fs-biz-panel's actual current tailwind.config.js (not
@@ -464,6 +497,13 @@ module.exports = {
         burntOrange: { 500: '#DB7725' },                 // Assessment: Choice tag
         forestGreen: { 50: '#E8F5E9', 500: '#3B6D11' },  // OJT: Apprenticeship tag
         vividGreen: { 50: '#E5F6EA', 500: '#00B35A' },   // OJT: Orientation tag
+        // ── RESOLVED from the deprecated `other{}` bucket, fs-biz-panel-only values.
+        // #FF63A8 (was other.5) NOT added here — identical to `fscourse` in
+        // fs-content-panel; use that instead, don't create a duplicate token.
+        // ⚠️ Names are PLACEHOLDERS — nobody has confirmed actual usage.
+        brightRed: '#FF3C3C',   // was other.2
+        deepIndigo: '#2B0BA9',  // was other.4
+        lavender: '#977DFF',    // was other.6
       },
       themeExtensions: {
         assessment: {
