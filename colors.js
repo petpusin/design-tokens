@@ -298,14 +298,24 @@ module.exports = {
       },
 
       // ── RESOLVED from the deprecated `other{}` bucket (see bottom of this file's
-      // header comment for the full resolution). These 2 values were the ONLY ones
-      // confirmed identical (same value, same index even) between fs-biz-panel's and
-      // fs-content-panel's `other{}` — promoted to core since 2/3 panels share them.
-      // ⚠️ Names are PLACEHOLDERS (color-descriptive, not semantic) — nobody has
-      // confirmed what these are actually used for. Rename once real usage is known.
+      // header comment for the full resolution). These values were confirmed shared
+      // between fs-biz-panel and fs-content-panel — promoted to core.
+      // ⚠️ `teal`/`paleBlue` are PLACEHOLDER names (color-descriptive, not semantic) —
+      // nobody has confirmed what these are actually used for. `fscourse` keeps its
+      // real production name (promoted from apps.fsContentPanel — fs-biz-panel's
+      // other.5 turned out to be this exact same value, confirming it's genuinely
+      // shared, not fs-content-panel-only as first assumed).
       accent: {
         teal: '#11C7BC',      // was other.1 in both panels (index agreed too)
         paleBlue: '#B5D2FF',  // was other.3 in fs-biz-panel, other.4 in fs-content-panel (index drifted)
+        fscourse: '#FF63A8',  // was other.5 in fs-biz-panel; real name from fs-content-panel
+        // PROMOTED from apps.fsBizPanel — source colors for the `assessment`/`ojt`
+        // theme extensions below, moved to core alongside them (future panels will
+        // likely need Assessment/OJT tag colors too, not just fs-biz-panel).
+        blueViolet: { 50: '#EDE7F6', 500: '#472CDD' },  // Assessment: Open-ended tag
+        burntOrange: { 500: '#DB7725' },                 // Assessment: Choice tag
+        forestGreen: { 50: '#E8F5E9', 500: '#3B6D11' },  // OJT: Apprenticeship tag
+        vividGreen: { 50: '#E5F6EA', 500: '#00B35A' },   // OJT: Orientation tag
       },
 
       // ── State scales (success/warning/danger) — CONFIRMED identical between A and B, zero conflict.
@@ -415,6 +425,31 @@ module.exports = {
           500: '#19191973', 700: '#191919a6', 1000: '#191919e6',
         },
       },
+
+      // PROMOTED from apps.fsBizPanel.themeExtensions — team decision: these tag-type
+      // colors (Test/Survey Assessment, OJT) will likely be needed by future panels
+      // too, not just fs-biz-panel, so defined once here instead of re-adding per-panel
+      // later. Requires CSS custom properties too: --color-blueViolet-500,
+      // --color-burntOrange-500, --color-forestGreen-50/500, --color-vividGreen-50/500,
+      // --color-info-50/500 (see accent.* raw colors above for the non-CSS-var source values).
+      assessment: {
+        openEnded: {
+          50: 'color-mix(in srgb, var(--color-blueViolet-500) 5%, transparent)',
+          200: 'color-mix(in srgb, var(--color-blueViolet-500) 20%, transparent)',
+          1000: 'color-mix(in srgb, var(--color-blueViolet-500) 100%, transparent)',
+        },
+        choice: {
+          50: 'color-mix(in srgb, var(--color-burntOrange-500) 5%, transparent)',
+          200: 'color-mix(in srgb, var(--color-burntOrange-500) 20%, transparent)',
+          1000: 'color-mix(in srgb, var(--color-burntOrange-500) 100%, transparent)',
+        },
+      },
+      ojt: {
+        apprenticeship: { 50: 'var(--color-forestGreen-50)', 1000: 'var(--color-forestGreen-500)' },
+        orientation: { 50: 'var(--color-vividGreen-50)', 1000: 'var(--color-vividGreen-500)' },
+        simulatedTraining: { 50: 'var(--color-blueViolet-50)', 1000: 'var(--color-blueViolet-500)' },
+        crossTraining: { 50: 'var(--color-info-50)', 1000: 'var(--color-info-500)' },
+      },
     },
   },
 
@@ -443,12 +478,11 @@ module.exports = {
         classroom: '#C4A9FF',
         embledlink: '#FFE088',
         body: '#161c27',
-        // CONFIRMED (was previously "uncertain") — fscourse/fsSubCategory/lbody belong
-        // to fs-content-panel, not fs-biz-panel. Verified by diffing fs-biz-panel's real
-        // current file (doesn't have these 3 at all) against this panel's real file
-        // (has them) — removed the duplicate copies that were mistakenly also sitting
-        // in apps.fsBizPanel.
-        fscourse: '#FF63A8',
+        // fscourse/fsSubCategory/lbody confirmed belonging to fs-content-panel (not
+        // fs-biz-panel — removed the duplicate copies mistakenly sitting there too).
+        // fscourse itself has since been PROMOTED to core.raw.accent.fscourse — turned
+        // out fs-biz-panel's other.5 was this same value, so it's genuinely shared,
+        // not content-panel-only. fsSubCategory/lbody stay here, still panel-specific.
         fsSubCategory: '#FC3287',
         lbody: '#E8EAEC',
         // ⚠️ Still uncertain — lgreen's home panel not explicitly confirmed either way.
@@ -492,79 +526,22 @@ module.exports = {
         // REMOVED lbody/fscourse/fsSubCategory — confirmed these actually belong to
         // fs-content-panel only (verified against fs-biz-panel's real current file,
         // which doesn't have them). Moved, not duplicated — see apps.fsContentPanel.
-        // New in this revision — used for Test/Survey Assessment + OJT tag types:
-        blueViolet: { 50: '#EDE7F6', 500: '#472CDD' },  // Assessment: Open-ended tag
-        burntOrange: { 500: '#DB7725' },                 // Assessment: Choice tag
-        forestGreen: { 50: '#E8F5E9', 500: '#3B6D11' },  // OJT: Apprenticeship tag
-        vividGreen: { 50: '#E5F6EA', 500: '#00B35A' },   // OJT: Orientation tag
+        // REMOVED blueViolet/burntOrange/forestGreen/vividGreen — promoted to
+        // core.raw (see there) alongside assessment/ojt, since future panels will
+        // likely need Assessment/OJT tag colors too, not just fs-biz-panel.
         // ── RESOLVED from the deprecated `other{}` bucket, fs-biz-panel-only values.
-        // #FF63A8 (was other.5) NOT added here — identical to `fscourse` in
-        // fs-content-panel; use that instead, don't create a duplicate token.
-        // ⚠️ Names are PLACEHOLDERS — nobody has confirmed actual usage.
+        // #FF63A8 (was other.5) NOT added here — promoted to core.raw.accent.fscourse
+        // instead (turned out to be shared with fs-content-panel, not biz-only).
+        // ⚠️ Names below are PLACEHOLDERS — nobody has confirmed actual usage.
         brightRed: '#FF3C3C',   // was other.2
         deepIndigo: '#2B0BA9',  // was other.4
         lavender: '#977DFF',    // was other.6
       },
-      themeExtensions: {
-        assessment: {
-          openEnded: {
-            50: 'color-mix(in srgb, var(--color-blueViolet-500) 5%, transparent)',
-            200: 'color-mix(in srgb, var(--color-blueViolet-500) 20%, transparent)',
-            1000: 'color-mix(in srgb, var(--color-blueViolet-500) 100%, transparent)',
-          },
-          choice: {
-            50: 'color-mix(in srgb, var(--color-burntOrange-500) 5%, transparent)',
-            200: 'color-mix(in srgb, var(--color-burntOrange-500) 20%, transparent)',
-            1000: 'color-mix(in srgb, var(--color-burntOrange-500) 100%, transparent)',
-          },
-        },
-        ojt: {
-          apprenticeship: { 50: 'var(--color-forestGreen-50)', 1000: 'var(--color-forestGreen-500)' },
-          orientation: { 50: 'var(--color-vividGreen-50)', 1000: 'var(--color-vividGreen-500)' },
-          simulatedTraining: { 50: 'var(--color-blueViolet-50)', 1000: 'var(--color-blueViolet-500)' },
-          crossTraining: { 50: 'var(--color-info-50)', 1000: 'var(--color-info-500)' },
-        },
-      },
-      // Deep-merged into core.themeExtensions.colorsSemantic for this panel only.
-      colorsSemanticExtension: {
-        light: {
-          text: {
-            openEnded: 'assessment.openEnded.1000', choice: 'assessment.choice.1000',
-            apprenticeship: 'ojt.apprenticeship.1000', orientation: 'ojt.orientation.1000',
-            simulatedTraining: 'ojt.simulatedTraining.1000', crossTraining: 'ojt.crossTraining.1000',
-          },
-          stroke: { openEnded: 'assessment.openEnded.200', choice: 'assessment.choice.200' },
-          icon: {
-            apprenticeship: 'ojt.apprenticeship.1000', orientation: 'ojt.orientation.1000',
-            simulatedTraining: 'ojt.simulatedTraining.1000', crossTraining: 'ojt.crossTraining.1000',
-          },
-          fill: {
-            openEnded: 'assessment.openEnded.50', choice: 'assessment.choice.50',
-            apprenticeship: 'ojt.apprenticeship.50', orientation: 'ojt.orientation.50',
-            simulatedTraining: 'ojt.simulatedTraining.50', crossTraining: 'ojt.crossTraining.50',
-          },
-        },
-        dark: {
-          text: {
-            openEnded: 'assessment.openEnded.1000', choice: 'assessment.choice.1000',
-            apprenticeship: 'ojt.apprenticeship.1000', orientation: 'ojt.orientation.1000',
-            simulatedTraining: 'ojt.simulatedTraining.1000', crossTraining: 'ojt.crossTraining.1000',
-          },
-          stroke: { openEnded: 'assessment.openEnded.200', choice: 'assessment.choice.200' },
-          icon: {
-            apprenticeship: 'ojt.apprenticeship.1000', orientation: 'ojt.orientation.1000',
-            simulatedTraining: 'ojt.simulatedTraining.1000', crossTraining: 'ojt.crossTraining.1000',
-          },
-          fill: {
-            openEnded: 'assessment.openEnded.50', choice: 'assessment.choice.50',
-            apprenticeship: 'ojt.apprenticeship.50', orientation: 'ojt.orientation.50',
-            simulatedTraining: 'ojt.simulatedTraining.50', crossTraining: 'ojt.crossTraining.50',
-          },
-        },
-        // NOTE: values above are STRING PATHS ("assessment.openEnded.1000"), resolved by
-        // tailwind-preset.js against this panel's own `themeExtensions`, not raw hex —
-        // keeps this data panel-agnostic and avoids duplicating hex a 3rd time.
-      },
+      // themeExtensions (assessment/ojt) and colorsSemanticExtension REMOVED —
+      // promoted to core.themeExtensions (see there) since future panels will likely
+      // need Assessment/OJT tag colors too, not just fs-biz-panel. The `assessment`/
+      // `ojt`/openEnded/choice/apprenticeship/etc. classes now work for EVERY panel,
+      // not just fs-biz-panel.
     },
     fsAssessmentPanel: {
       rawColors: {
